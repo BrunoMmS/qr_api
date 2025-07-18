@@ -12,5 +12,5 @@ class QRMaker:
         img = qr.make_image(fill_color="black", back_color="white")
         buffered = io.BytesIO()
         img.save(buffered, format="PNG")  # <-- esto es importante
-        img_str = base64.b64encode(buffered.getvalue()).decode()
+        img_str = base64.b64encode(buffered.getvalue()).decode("iso8859-15")
         return {"qr_base64": img_str}
