@@ -1,16 +1,20 @@
-import qrcode
-import io
-import base64
 from QRRequestModel import QRRequest
+from QRStrategy import QRStrategy
+from QRDefaultStrategy import QRDefaultStrategy
+from QRAfipStrategy import QRAfipStrategy
 
 class QRMaker:
+    def __init__(self):
+        self.qrStrategy: QRStrategy = None
+    
     def generate_qr(self, req: QRRequest):
-        qr = qrcode.QRCode(version=1, box_size=10, border=4)
-        qr.add_data(req.text)
-        qr.make(fit=True)
+        self.__setStrategy(req.isAfip)
+        return self.qrStrategy.generate_qr(req.text)
 
-        img = qr.make_image(fill_color="black", back_color="white")
-        buffered = io.BytesIO()
-        img.save(buffered, format="PNG")  # <-- esto es importante
-        img_str = base64.b64encode(buffered.getvalue()).decode("iso8859-15")
-        return {"qr_base64": img_str}
+    def __setStrategy(self, isAfip: bool):
+        if isAfip:
+            self.qrStrategy = QRAfipStrategy()
+        else:
+            self.qrStrategy = QRDefaultStrategy()
+
+        
