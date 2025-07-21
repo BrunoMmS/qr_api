@@ -1,5 +1,7 @@
 from pydantic import BaseModel
+from typing import Optional, Union
+
 
 class QRRequest(BaseModel):
-    text: str
-    isAfip: bool = False
+    text: str | dict
+    isAfip: Optional[bool] = False
